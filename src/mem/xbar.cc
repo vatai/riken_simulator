@@ -53,6 +53,7 @@
 #include "base/trace.hh"
 #include "debug/AddrRanges.hh"
 #include "debug/Drain.hh"
+#include "debug/FugakuNext.hh"
 #include "debug/XBar.hh"
 
 BaseXBar::BaseXBar(const BaseXBarParams *p)
@@ -132,6 +133,8 @@ BaseXBar::calcPacketTiming(PacketPtr pkt, Tick header_delay,
     if (pkt->hasData()) {
         bool direction = (inverse) ? pkt->isResponse() : pkt->isRequest();
         uint32_t bwidth = (direction) ? width : respwidth;
+        const RequestPtr req = pkt->req;
+        DPRINTF(FugakuNext, "ReqId: %d\n", req->masterId());
         // the payloadDelay takes into account the relative time to
         // deliver the payload of the packet, after the header delay,
         // we take the maximum since the payload delay could already
@@ -139,6 +142,7 @@ BaseXBar::calcPacketTiming(PacketPtr pkt, Tick header_delay,
         pkt->payloadDelay = std::max<Tick>(pkt->payloadDelay,
                                            divCeil(pkt->getSize(), bwidth) *
                                            clockPeriod());
+        DPRINTF(FugakuNext, "PayloadDelay: %d\n", pkt->payloadDelay);
     }
 
     // the payload delay is not paying for the clock offset as that is

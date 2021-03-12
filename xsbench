@@ -1,0 +1,23 @@
+#!/usr/bin/bash
+
+ENV_FILE=/tmp/env_file
+NUM_THREADS=3
+
+CPU_TYPE=${CPU_TYPE:-O3_ARM_PostK_3}
+CACHE_SIZE=${CACHE_SIZE:-8MB}
+
+echo "OMP_NUM_THREADS="${NUM_THREADS}"" > "$ENV_FILE"
+echo "OMP_NUM_PARALELL="${NUM_THREADS}"" >> "$ENV_FILE"
+echo "FLIB_FASTOMP=FALSE" >> "$ENV_FILE"
+echo "FLIB_CNTL_BARRIER_ERR=FALSE" >> "$ENV_FILE"
+~/code/riken_simulator/build/ARM/gem5.opt --debug-flags=FugakuNext \
+  ~/code/riken_simulator/configs/example/se.py \
+  --cpu-type=${CPU_TYPE} \
+  --caches \
+  --l2cache \
+  --l2_size=${CACHE_SIZE} \
+  -n ${NUM_THREADS} \
+  -e ${ENV_FILE} \
+  -c ~/code/NEDO/XSBench/src/XSBench \
+  -o "-t ${NUM_THREADS} -s small -l 100 -g 100"
+ 
