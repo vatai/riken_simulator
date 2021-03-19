@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 
 ENV_FILE=/tmp/env_file
-NUM_THREADS=3
+NUM_THREADS=1
 
 CPU_TYPE=${CPU_TYPE:-O3_ARM_PostK_3}
 CACHE_SIZE=${CACHE_SIZE:-8MB}
@@ -19,5 +19,5 @@ echo "FLIB_CNTL_BARRIER_ERR=FALSE" >> "$ENV_FILE"
   -n ${NUM_THREADS} \
   -e ${ENV_FILE} \
   -c ~/code/NEDO/XSBench/src/XSBench \
-  -o "-t ${NUM_THREADS} -s small -l 100 -g 100"
+  -o "-t ${NUM_THREADS} -s small -l 10 -g 10"
  
